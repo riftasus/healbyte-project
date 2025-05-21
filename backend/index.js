@@ -3,22 +3,19 @@ const cors = require('cors');
 const { createClient } = require('@supabase/supabase-js');
 
 const app = express();
-const port = 5000;
+const port = process.env.PORT || 5000;
 
-const supabaseUrl = 'https://nckycekwhzmdibtjquxv.supabase.co'; // replace this
-const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5ja3ljZWt3aHptZGlidGpxdXh2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDczMDMxNDksImV4cCI6MjA2Mjg3OTE0OX0.0r1g0OnT7-8XI5RlJHYOfL5Fbfx1vjkQV0PpkbZhvdE';                        // replace this
+const supabaseUrl = process.env.SUPABASE_URL;
+const supabaseKey = process.env.SUPABASE_KEY;
 
 const supabase = createClient(supabaseUrl, supabaseKey);
 
-
 app.use(cors());
-
 app.use(express.json());
 
 app.get('/message', (req, res) => {
   res.json({ text: "Hello from backend version 1" });
 });
-
 
 // Get all users
 app.get('/users', async (req, res) => {
@@ -34,7 +31,6 @@ app.get('/users', async (req, res) => {
   });
 });
 
-
 // Get all appointments
 app.get('/appointments', async (req, res) => {
   const { data, error } = await supabase.from('appointment').select('*');
@@ -43,5 +39,5 @@ app.get('/appointments', async (req, res) => {
 });
 
 app.listen(port, () => {
-  console.log(`Backend running on http://localhost:${port}`);
+  console.log(`Backend running on port ${port}`);
 });
