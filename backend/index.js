@@ -5,8 +5,9 @@ const { createClient } = require('@supabase/supabase-js');
 const app = express();
 const port = process.env.PORT || 5000;
 
-const supabaseUrl = process.env.SUPABASE_URL;
-const supabaseKey = process.env.SUPABASE_KEY;
+// Directly using Supabase credentials (replace with your actual values)
+const supabaseUrl = 'https://nckycekwhzmdibtjquxv.supabase.co';
+const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5ja3ljZWt3aHptZGlidGpxdXh2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDczMDMxNDksImV4cCI6MjA2Mjg3OTE0OX0.0r1g0OnT7-8XI5RlJHYOfL5Fbfx1vjkQV0PpkbZhvdE';
 
 const supabase = createClient(supabaseUrl, supabaseKey);
 
