@@ -5,7 +5,7 @@ function App() {
   const [message, setMessage] = useState("");
 
   useEffect(() => {
-    fetch('http://localhost:5000/users')
+    fetch('https://healbyte-project-backend.onrender.com/users')
       .then(res => res.json())
       .then(data => {
         console.log('Frontend fetched data:', data);
