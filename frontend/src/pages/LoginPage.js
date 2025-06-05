@@ -7,51 +7,62 @@ export default function LoginPage() {
 
   const navigate = useNavigate();
 
-  const handleLogin = async (e) => {
-    e.preventDefault();
+  // Function runs when user clicks Login button
+  async function handleLogin(event) {
+    event.preventDefault(); // stop page refresh
 
     try {
-      const res = await fetch('http://localhost:5000/users');
-      const result = await res.json();
-      const users = result.users;
+      // Send email and password to backend
+      const response = await fetch('http://localhost:5000/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          email: email,
+          password: password
+        })
+      });
 
-      // Find a matching user
-      const foundUser = users.find(
-        (user) => user.email === email && user.password === password
-      );
+      const result = await response.json();
 
-      if (foundUser) {
-        alert(`✅ Welcome, ${foundUser.name}! Role: ${foundUser.role_id}`);
-        // You can redirect or store login info here
-
-        switch (foundUser.role_id) {
-          case 'doctor':
-            navigate('/doctor');
-            break;
-          case 'coordinator':
-            navigate('/coordinator');
-            break;
-          case 'test_conductor':
-            navigate('/conductor');
-            break;
-          case 'deliveryman':
-            navigate('/deliveryman');
-            break;
-          case 'patient':
-            navigate('/patient');
-            break;
-          default:
-            alert('Unknown role');
-        }
-
-      } else {
-        alert("❌ Invalid email or password.");
+      // If login failed
+      if (!response.ok) {
+        alert("❌ " + (result.error || "Login failed"));
+        return;
       }
-    } catch (err) {
-      console.error("Login error:", err);
+
+      // If login successful
+      const user = result.user;
+      const token = result.token;
+
+      // ✅ Save token to localStorage
+      localStorage.setItem('token', token);
+
+      alert("✅ Welcome, " + user.name + "! Role: " + user.role_id);
+
+      // Go to the user's page depending on role
+      if (user.role_id === 'doctor') {
+        navigate('/doctor');
+      } else if (user.role_id === 'coordinator') {
+        navigate('/coordinator');
+      } else if (user.role_id === 'test_conductor') {
+        navigate('/conductor');
+      } else if (user.role_id === 'deliveryman') {
+        navigate('/deliveryman');
+      } else if (user.role_id === 'patient') {
+        navigate('/patient');
+      } else {
+        alert('Unknown role');
+      }
+
+    } catch (error) {
+      console.error("Login error:", error);
       alert("Something went wrong while logging in.");
     }
-  };
+  }
+
+
 
   return (
     <div>

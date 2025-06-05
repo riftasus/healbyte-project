@@ -1,43 +1,28 @@
+require('dotenv').config(); // Load environment variables
+
 const express = require('express');
 const cors = require('cors');
-const { createClient } = require('@supabase/supabase-js');
 
 const app = express();
 const port = process.env.PORT || 5000;
 
-// Directly using Supabase credentials (replace with your actual values)
-const supabaseUrl = 'https://nckycekwhzmdibtjquxv.supabase.co';
-const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5ja3ljZWt3aHptZGlidGpxdXh2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDczMDMxNDksImV4cCI6MjA2Mjg3OTE0OX0.0r1g0OnT7-8XI5RlJHYOfL5Fbfx1vjkQV0PpkbZhvdE';
-
-const supabase = createClient(supabaseUrl, supabaseKey);
+// const supabase = require('./utils/supabaseClient'); // use centralized client
 
 app.use(cors());
 app.use(express.json());
 
-app.get('/message', (req, res) => {
-  res.json({ text: "Hello from backend version 1" });
-});
+// Routes
+const authRoutes = require('./routes/authRoutes');
+const userRoutes = require('./routes/userRoutes');
+const appointmentRoutes = require('./routes/appointmentRoutes');
+const locationRoutes = require('./routes/locationRoutes');
+app.use('/locations', locationRoutes);
 
-// Get all users
-app.get('/users', async (req, res) => {
-  const { data, error } = await supabase.from('user').select('*');
-  console.log('Backend /users data:', data);
-  if (error) {
-    console.error('Supabase error:', error);
-    return res.status(500).json({ error: error.message });
-  }
-  res.json({
-    message: "Hello from backend version 1",
-    users: data
-  });
-});
 
-// Get all appointments
-app.get('/appointments', async (req, res) => {
-  const { data, error } = await supabase.from('appointment').select('*');
-  if (error) return res.status(500).json({ error: error.message });
-  res.json(data);
-});
+app.use(authRoutes);
+app.use(userRoutes);
+app.use(appointmentRoutes);
+
 
 app.listen(port, () => {
   console.log(`Backend running on port ${port}`);
