@@ -23,7 +23,7 @@ async function loginUser(req, res) {
       return res.status(401).json({ error: "Invalid password" });
     }
 
-    const token = jwtTokenGenerator(user.user_id);
+    const token = jwtTokenGenerator(user.user_id, user.role_id);
 
     res.status(200).json({
       message: "Login successful",
@@ -93,7 +93,7 @@ async function registerUser(req, res) {
 
     const result = await pool.query(insertQuery, insertValues);
     const newUserId = result.rows[0].user_id;
-    const newToken = jwtTokenGenerator(newUserId);
+    const newToken = jwtTokenGenerator(newUserId, 'patient');
 
     return res.status(200).json({ message: "Signup successful", user_id: newUserId, token: newToken });
 
@@ -103,4 +103,4 @@ async function registerUser(req, res) {
   }
 }
 
-module.exports = { loginUser, registerUser};
+module.exports = { loginUser, registerUser };

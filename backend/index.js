@@ -16,6 +16,8 @@ const authRoutes = require('./routes/authRoutes');
 const userRoutes = require('./routes/userRoutes');
 const appointmentRoutes = require('./routes/appointmentRoutes');
 const locationRoutes = require('./routes/locationRoutes');
+const doctorRoutes = require('./routes/doctorRoutes');
+app.use('/doctor', doctorRoutes); // 👈 this makes /doctor/profile work
 app.use('/locations', locationRoutes);
 
 
