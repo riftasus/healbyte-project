@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 export default function LoginPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-
+  const [message, setMessage] = useState('');
   const navigate = useNavigate();
 
   // Function runs when user clicks Login button
@@ -27,8 +27,8 @@ export default function LoginPage() {
       const result = await response.json();
 
       // If login failed
-      if (!response.ok) {
-        alert("❌ " + (result.error || "Login failed"));
+      if (!response.ok || !result.token) {
+        setMessage("❌ " + (result.error || "Login failed"));
         return;
       }
 
@@ -39,30 +39,33 @@ export default function LoginPage() {
       // ✅ Save token to localStorage
       localStorage.setItem('token', token);
 
-      alert("✅ Welcome, " + user.name + "! Role: " + user.role_id);
+      setMessage("✅ Welcome, " + user.name + "! Role: " + user.role_id);
 
       // Go to the user's page depending on role
-      if (user.role_id === 'doctor') {
-        navigate('/doctor');
-      } else if (user.role_id === 'coordinator') {
-        navigate('/coordinator');
-      } else if (user.role_id === 'test_conductor') {
-        navigate('/conductor');
-      } else if (user.role_id === 'deliveryman') {
-        navigate('/deliveryman');
-      } else if (user.role_id === 'patient') {
-        navigate('/patient');
-      } else {
-        alert('Unknown role');
-      }
-
+      setTimeout(() => {
+        if (user.role_id === 'doctor') {
+          navigate('/doctor');
+        } else if (user.role_id === 'coordinator') {
+          navigate('/coordinator');
+        } else if (user.role_id === 'test_conductor') {
+          navigate('/conductor');
+        } else if (user.role_id === 'deliveryman') {
+          navigate('/deliveryman');
+        } else if (user.role_id === 'patient') {
+          navigate('/patient');
+        } else {
+          setMessage('Unknown role');
+        }
+      }, 1000);
     } catch (error) {
       console.error("Login error:", error);
-      alert("Something went wrong while logging in.");
+      setMessage("Something went wrong while logging in.");
     }
   }
 
-
+  // Example: How to use the token for an authenticated fetch
+  // const token = localStorage.getItem('token');
+  // fetch('/api/protected', { headers: { "token": token } })
 
   return (
     <div>
@@ -90,6 +93,7 @@ export default function LoginPage() {
 
         <button type="submit" style={{ marginTop: '15px' }}>Login</button>
       </form>
+      {message && <p style={{ marginTop: '15px' }}>{message}</p>}
     </div>
   );
 }

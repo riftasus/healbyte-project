@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 export default function SignupPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
   const [dateOfBirth, setDateOfBirth] = useState("");
@@ -51,32 +52,30 @@ export default function SignupPage() {
       });
   }
 
-function handleDistrictChange(event) {
-  var districtId = event.target.value;
-  setSelectedDistrict(districtId);
-  setSelectedUpazila("");
-  setUpazilas([]);
+  function handleDistrictChange(event) {
+    var districtId = event.target.value;
+    setSelectedDistrict(districtId);
+    setSelectedUpazila("");
+    setUpazilas([]);
 
-  fetch("http://localhost:5000/locations/upazilas/" + districtId)
-    .then(function (res) {
-      return res.json();
-    })
-    .then(function (data) {
-      console.log("Fetched upazilas:", data); // ✅ Log here
-      if (Array.isArray(data)) {
-        setUpazilas(data);
-      } else {
-        setUpazilas([]); // fallback if bad data
-      }
-    })
-    .catch(function (err) {
-      console.error("Upazila fetch error", err);
-      setUpazilas([]);
-    });
-}
+    fetch("http://localhost:5000/locations/upazilas/" + districtId)
+      .then(function (res) {
+        return res.json();
+      })
+      .then(function (data) {
+        if (Array.isArray(data)) {
+          setUpazilas(data);
+        } else {
+          setUpazilas([]);
+        }
+      })
+      .catch(function (err) {
+        console.error("Upazila fetch error", err);
+        setUpazilas([]);
+      });
+  }
 
-
-  function handleSubmit(event) {
+  async function handleSubmit(event) {
     event.preventDefault();
 
     if (
@@ -91,7 +90,12 @@ function handleDistrictChange(event) {
       return;
     }
 
-    var userData = {
+    if (password != confirmPassword) {
+      setMessage("Passwords do not match.");
+      return;
+    }
+
+    const userData = {
       name: name,
       email: email,
       password: password,
@@ -103,28 +107,34 @@ function handleDistrictChange(event) {
       postal_code: postalCode,
     };
 
-    fetch("http://localhost:5000/register", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(userData),
-    })
-      .then(function (res) {
-        return res.json().then(function (data) {
-          return { status: res.status, body: data };
-        });
-      })
-      .then(function (response) {
-        if (response.status === 200) {
-          setMessage("Signup successful!");
-          navigate("/login");
-        } else {
-          setMessage(response.body.error || "Signup failed.");
-        }
-      })
-      .catch(function (err) {
-        console.error("Signup error", err);
-        setMessage("Server error");
+    try {
+      const res = await fetch("http://localhost:5000/register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(userData),
       });
+
+      const data = await res.json();
+
+      if (res.status === 200 && data.token) {
+        // Store token for authenticated requests
+        localStorage.setItem("token", data.token);
+        setMessage("Signup successful! Redirecting to login page...");
+        setTimeout(() => {
+          navigate("/login"); // Change to a dashboard/profile route if needed
+        }, 1000);
+      } else if (res.status === 200) {
+        setMessage("Signup successful! Please log in.");
+        setTimeout(() => {
+          navigate("/login");
+        }, 1000);
+      } else {
+        setMessage(data.error || "Signup failed.");
+      }
+    } catch (err) {
+      console.error("Signup error", err);
+      setMessage("Server error");
+    }
   }
 
   return (
@@ -135,9 +145,7 @@ function handleDistrictChange(event) {
           type="text"
           placeholder="Full Name"
           value={name}
-          onChange={function (e) {
-            setName(e.target.value);
-          }}
+          onChange={(e) => setName(e.target.value)}
           required
         />
         <br />
@@ -145,9 +153,7 @@ function handleDistrictChange(event) {
           type="email"
           placeholder="Email"
           value={email}
-          onChange={function (e) {
-            setEmail(e.target.value);
-          }}
+          onChange={(e) => setEmail(e.target.value)}
           required
         />
         <br />
@@ -155,9 +161,15 @@ function handleDistrictChange(event) {
           type="password"
           placeholder="Password"
           value={password}
-          onChange={function (e) {
-            setPassword(e.target.value);
-          }}
+          onChange={e => setPassword(e.target.value)}
+          required
+        />
+        <br />
+        <input
+          type="password"
+          placeholder="Confirm Password"
+          value={confirmPassword}
+          onChange={e => setConfirmPassword(e.target.value)}
           required
         />
         <br />
@@ -165,25 +177,19 @@ function handleDistrictChange(event) {
           type="text"
           placeholder="Phone"
           value={phone}
-          onChange={function (e) {
-            setPhone(e.target.value);
-          }}
+          onChange={(e) => setPhone(e.target.value)}
         />
         <br />
         <input
           type="date"
           value={dateOfBirth}
-          onChange={function (e) {
-            setDateOfBirth(e.target.value);
-          }}
+          onChange={(e) => setDateOfBirth(e.target.value)}
         />
         <br />
 
         <select
           value={gender}
-          onChange={function (e) {
-            setGender(e.target.value);
-          }}
+          onChange={(e) => setGender(e.target.value)}
         >
           <option value="">Select Gender (optional)</option>
           <option value="male">Male</option>
@@ -218,9 +224,7 @@ function handleDistrictChange(event) {
 
         <select
           value={selectedUpazila}
-          onChange={function (e) {
-            setSelectedUpazila(e.target.value);
-          }}
+          onChange={(e) => setSelectedUpazila(e.target.value)}
           required
         >
           <option value="">Select Upazila</option>
@@ -238,18 +242,14 @@ function handleDistrictChange(event) {
           type="text"
           placeholder="Road No"
           value={roadNo}
-          onChange={function (e) {
-            setRoadNo(e.target.value);
-          }}
+          onChange={(e) => setRoadNo(e.target.value)}
         />
         <br />
         <input
           type="text"
           placeholder="Postal Code"
           value={postalCode}
-          onChange={function (e) {
-            setPostalCode(e.target.value);
-          }}
+          onChange={(e) => setPostalCode(e.target.value)}
         />
         <br />
 

@@ -2,16 +2,13 @@
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 const pool = require('../utils/db'); // PG pool
+const jwtTokenGenerator = require('../utils/jwtTokenGenerator');
 
 
 async function loginUser(req, res) {
   const { email, password } = req.body;
 
   try {
-    if (!email || !password) {
-      return res.status(400).json({ error: "Missing email or password" });
-    }
-
     const checkQuery = `SELECT * FROM "user" WHERE email = $1`;
     const result = await pool.query(checkQuery, [email]);
 
@@ -26,11 +23,7 @@ async function loginUser(req, res) {
       return res.status(401).json({ error: "Invalid password" });
     }
 
-    const token = jwt.sign(
-      { user_id: user.user_id, role: user.role_id },
-      process.env.JWT_SECRET,
-      { expiresIn: "2h" }
-    );
+    const token = jwtTokenGenerator(user.user_id);
 
     res.status(200).json({
       message: "Login successful",
@@ -66,10 +59,6 @@ async function registerUser(req, res) {
   } = req.body;
 
   try {
-    if (!name || !email || !password || !upazila_id) {
-      return res.status(400).json({ error: "Missing required fields" });
-    }
-
     const checkQuery = `SELECT email FROM "user" WHERE email = $1`;
     const checkResult = await pool.query(checkQuery, [email]);
 
@@ -104,8 +93,9 @@ async function registerUser(req, res) {
 
     const result = await pool.query(insertQuery, insertValues);
     const newUserId = result.rows[0].user_id;
+    const newToken = jwtTokenGenerator(newUserId);
 
-    return res.status(200).json({ message: "Signup successful", user_id: newUserId });
+    return res.status(200).json({ message: "Signup successful", user_id: newUserId, token: newToken });
 
   } catch (err) {
     console.error("Registration error:", err.message);
@@ -113,7 +103,4 @@ async function registerUser(req, res) {
   }
 }
 
-module.exports = {
-  loginUser,
-  registerUser
-};
+module.exports = { loginUser, registerUser};

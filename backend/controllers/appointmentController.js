@@ -1,15 +1,23 @@
 // controllers/appointmentController.js
-const supabase = require('../utils/supabaseClient');
+const pool = require('../utils/db'); // PG pool
+
+// const supabase = require('../utils/supabaseClient');
 
 async function getAllAppointments(req, res) {
-        const { data, error } = await supabase.from('appointment').select('*');
+        try {
+                const result = await pool.query(`SELECT * FROM "appointment"`);
 
-        if (error) {
-                console.log('Supabase error:', error);
-                res.status(500).json({ error: error.message });
-                return;
+                res.json({appointments: result.rows});
+
         }
-        res.json(data);
+        catch (error) {
+                console.log("Postgresql error: ", error.message);
+
+                res.status(500).json({ error: "Internal server error" });
+        };
+
+
+
 };
 
 module.exports = { getAllAppointments };
