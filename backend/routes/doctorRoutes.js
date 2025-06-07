@@ -6,5 +6,7 @@ const doctorController = require("../controllers/doctorController");
 
 // router.get("/profile", authorize, doctorController.getDoctorProfile);
 router.get("/profile", authorize, requireRole("doctor"), doctorController.getDoctorProfile);
+router.get("/top-rated", doctorController.getTopRatedDoctors);
+// This route is for fetching the top-rated doctors
 
 module.exports = router;

@@ -21,12 +21,14 @@ const patientRoutes = require('./routes/patientRoutes');
 const conductorRoutes = require('./routes/conductorRoutes');
 const coordinatorRoutes = require('./routes/coordinatorRoutes');
 const deliverymanRoutes = require('./routes/deliverymanRoutes');
+// const apiRoutes = require('./routes/apiRoutes'); // Centralized API routes
 app.use('/doctor', doctorRoutes); // 👈 this makes /doctor/profile work
 app.use('/locations', locationRoutes);
 app.use('/patient', patientRoutes);
 app.use('/conductor', conductorRoutes);
 app.use('/coordinator', coordinatorRoutes);
 app.use('/deliveryman', deliverymanRoutes);
+// app.use('/api', apiRoutes); // Centralized API routes
 
 
 app.use(authRoutes);
