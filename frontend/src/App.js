@@ -11,6 +11,7 @@ import PatientPage from './pages/patient/PatientPage';
 import ConductorPage from './pages/conductor/ConductorPage';
 import CoordinatorPage from './pages/coordinator/CoordinatorPage';
 import DeliverymanPage from './pages/deliveryman/DeliverymanPage';
+import SearchDoctor from './pages/patient/SearchDoctor';
 
 function App() {
   const [users, setUsers] = useState([]);
@@ -57,6 +58,9 @@ function App() {
           <Route path="/coordinator" element={<CoordinatorPage setIsLoggedIn = {setIsLoggedIn}/>} />
           <Route path="/conductor" element={<ConductorPage setIsLoggedIn = {setIsLoggedIn}/>} />
           <Route path="/deliveryman" element={<DeliverymanPage setIsLoggedIn = {setIsLoggedIn}/>} />
+          <Route path="/search-doctors" element={<SearchDoctor />} />
+          
+          {/* Redirect to home if no match */}
         </Routes>
       </div>
     </BrowserRouter>
