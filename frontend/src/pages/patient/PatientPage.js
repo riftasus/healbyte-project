@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-export default function PatientPage({setIsLoggedIn}) {
+export default function PatientPage({ setIsLoggedIn }) {
   const [patient, setPatient] = useState(null);
   const [error, setError] = useState("");
   const navigate = useNavigate();
@@ -41,6 +41,11 @@ export default function PatientPage({setIsLoggedIn}) {
     navigate("/login");
   }
 
+   function handleSearchDoctors() {
+    navigate("/search-doctors");
+  }
+
+
   if (error) {
     return <p style={{ color: "red" }}>Error: {error}</p>;
   }
@@ -62,6 +67,11 @@ export default function PatientPage({setIsLoggedIn}) {
       <p><strong>Phone:</strong> {patient.phone_no || patient.phone}</p>
       <p><strong>Allergies:</strong> {patient.allergies}</p>
       <p><strong>Blood Type:</strong> {patient.blood_type}</p>
+      <div style={{ marginTop: 20 }}>
+        <button onClick={handleSearchDoctors} style={{ padding: "8px 20px", fontSize: "16px" }}>
+          🔍 Search Doctors
+        </button>
+      </div>
     </div>
   );
 }

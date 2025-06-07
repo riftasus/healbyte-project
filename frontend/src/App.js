@@ -3,14 +3,14 @@ import { BrowserRouter, Routes, Route, Link, useLocation } from 'react-router-do
 import './styles/cute-dark.css';
 
 
-import SignupPage from './pages/SignupPage';
-import LoginPage from './pages/LoginPage';
-import HomePage from './pages/HomePage';
-import DoctorPage from './pages/DoctorPage';
-import PatientPage from './pages/PatientPage';
-import ConductorPage from './pages/ConductorPage';
-import CoordinatorPage from './pages/CoordinatorPage';
-import DeliverymanPage from './pages/DeliverymanPage';
+import SignupPage from './pages/intro/SignupPage';
+import LoginPage from './pages/intro/LoginPage';
+import HomePage from './pages/intro/HomePage';
+import DoctorPage from './pages/doctor/DoctorPage';
+import PatientPage from './pages/patient/PatientPage';
+import ConductorPage from './pages/conductor/ConductorPage';
+import CoordinatorPage from './pages/coordinator/CoordinatorPage';
+import DeliverymanPage from './pages/deliveryman/DeliverymanPage';
 
 function App() {
   const [users, setUsers] = useState([]);
@@ -43,8 +43,8 @@ function App() {
         {!isLoggedIn && (
           <nav style={{ marginBottom: '20px' }}>
             <Link to="/" style={{ marginRight: '10px' }}>Home</Link>
-            <Link to="/signup" style={{ marginRight: '10px' }}>Signup</Link>
-            <Link to="/login">Login</Link>
+            <Link to="/intro/signup" style={{ marginRight: '10px' }}>Signup</Link>
+            <Link to="/intro/login">Login</Link>
           </nav>
         )}
 
