@@ -51,8 +51,8 @@ function App() {
 
         <Routes>
           <Route path="/" element={<HomePage users={users} message={message} />} />
-          <Route path="/signup" element={<SignupPage />} />
-          <Route path="/login" element={<LoginPage setIsLoggedIn={setIsLoggedIn} />} />
+          <Route path="/intro/signup" element={<SignupPage />} />
+          <Route path="/intro/login" element={<LoginPage setIsLoggedIn={setIsLoggedIn} />} />
           <Route path="/doctor" element={<DoctorPage setIsLoggedIn={setIsLoggedIn} />} />
           <Route path="/patient" element={<PatientPage setIsLoggedIn = {setIsLoggedIn}/>} />
           <Route path="/coordinator" element={<CoordinatorPage setIsLoggedIn = {setIsLoggedIn}/>} />

@@ -7,7 +7,15 @@ export default function TopRatedDoctors() {
 	const [selectedDoctor, setSelectedDoctor] = useState(null);
 
 	useEffect(() => {
-		fetch("http://localhost:5000/doctor/top-rated")
+		const token = localStorage.getItem("token");
+
+		fetch("http://localhost:5000/doctor/top-rated", {
+			method: "GET",
+			headers: {
+				"Content-Type": "application/json",
+				token: token, // Include token in header
+			},
+		})
 			.then((res) => {
 				if (!res.ok) throw new Error("Failed to fetch doctors");
 				return res.json();

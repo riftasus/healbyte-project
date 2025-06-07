@@ -7,25 +7,59 @@ export default function SearchDoctor() {
   const [searchResults, setSearchResults] = useState([]);
   const [loading, setLoading] = useState(false);
 
-  const handleSearch = async ({ searchType, searchQuery, feeRange }) => {
+  const handleSearch = async ({ searchQuery, specialty, feeRange }) => {
     setLoading(true);
-    let url = "http://localhost:5000/api/doctors/search?";
-    if (searchType === "name") {
-      url += `name=${encodeURIComponent(searchQuery)}`;
-    } else if (searchType === "specialty") {
-      url += `specialty=${encodeURIComponent(searchQuery)}`;
-    } else if (searchType === "fee") {
-      url += `minFee=${feeRange.min}&maxFee=${feeRange.max}`;
+
+    let url = "http://localhost:5000/doctor/search?";
+    const params = [];
+
+    // Handle name
+    if (searchQuery && searchQuery.trim() !== "") {
+      params.push(`name=${encodeURIComponent(searchQuery.trim())}`);
     }
+
+    // Handle specialty
+    if (specialty && specialty.trim() !== "") {
+      params.push(`specialty=${encodeURIComponent(specialty.trim())}`);
+    }
+
+    // Handle fee range
+    const min = feeRange?.min;
+    const max = feeRange?.max;
+
+    if (min !== undefined && min !== "" && !isNaN(min)) {
+      params.push(`minFee=${min}`);
+    }
+
+    if (max !== undefined && max !== "" && !isNaN(max)) {
+      params.push(`maxFee=${max}`);
+    }
+
+    if (params.length > 0) {
+      url += params.join("&");
+    }
+
     try {
-      const res = await fetch(url);
+      // const res = await fetch(url);
+      const token = localStorage.getItem("token");
+
+      const res = await fetch(url, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          token: token, // 👈 add this
+        },
+      });
       const data = await res.json();
       setSearchResults(data.doctors || []);
-    } catch {
+    } catch (err) {
+      console.error("Search error:", err);
       setSearchResults([]);
     }
+
     setLoading(false);
   };
+
 
   return (
     <div style={{ display: "flex", gap: 32 }}>
