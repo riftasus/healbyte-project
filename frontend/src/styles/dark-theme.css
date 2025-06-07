@@ -1,0 +1,21 @@
+:root {
+  --bg-main: #181818;
+  --bg-secondary: #232323;
+  --text-main: #f1f1f1;
+  --accent: #bb86fc;
+  --border: #444;
+}
+
+body {
+  background-color: var(--bg-main);
+  color: var(--text-main);
+}
+nav {
+  background: var(--bg-secondary);
+}
+input, textarea, select {
+  background: var(--bg-secondary);
+  color: var(--text-main);
+  border: 1px solid var(--border);
+}
+/* ...etc */

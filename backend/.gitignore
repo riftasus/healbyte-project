@@ -1,0 +1,9 @@
+# Ignore dependency folder
+node_modules/
+
+# Ignore environment variables
+.env
+
+# # Optional: other auto-generated stuff
+# dist/
+# build/

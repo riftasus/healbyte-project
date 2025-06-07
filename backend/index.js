@@ -17,8 +17,16 @@ const userRoutes = require('./routes/userRoutes');
 const appointmentRoutes = require('./routes/appointmentRoutes');
 const locationRoutes = require('./routes/locationRoutes');
 const doctorRoutes = require('./routes/doctorRoutes');
+const patientRoutes = require('./routes/patientRoutes');
+const conductorRoutes = require('./routes/conductorRoutes');
+const coordinatorRoutes = require('./routes/coordinatorRoutes');
+const deliverymanRoutes = require('./routes/deliverymanRoutes');
 app.use('/doctor', doctorRoutes); // 👈 this makes /doctor/profile work
 app.use('/locations', locationRoutes);
+app.use('/patient', patientRoutes);
+app.use('/conductor', conductorRoutes);
+app.use('/coordinator', coordinatorRoutes);
+app.use('/deliveryman', deliverymanRoutes);
 
 
 app.use(authRoutes);

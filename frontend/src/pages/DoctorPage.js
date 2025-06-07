@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
-export default function DoctorPage() {
+export default function DoctorPage({ setIsLoggedIn }) {
   const [doctor, setDoctor] = useState(null);
   const [error, setError] = useState("");
+  const navigate = useNavigate();
 
   useEffect(() => {
     async function fetchDoctorProfile() {
@@ -32,6 +34,12 @@ export default function DoctorPage() {
     fetchDoctorProfile();
   }, []);
 
+  function handleLogout() {
+    localStorage.removeItem("token");
+    if (setIsLoggedIn) setIsLoggedIn(false);
+    navigate("/login");
+  }
+
   if (error) {
     return <p style={{ color: "red" }}>Error: {error}</p>;
   }
@@ -42,6 +50,11 @@ export default function DoctorPage() {
 
   return (
     <div>
+      <div style={{ display: "flex", justifyContent: "flex-end", marginBottom: 10 }}>
+        <button onClick={handleLogout} style={{ padding: "6px 16px" }}>
+          Logout
+        </button>
+      </div>
       <h2>Welcome Dr. {doctor.name} 🩺</h2>
       <p><strong>ID:</strong> {doctor.user_id || doctor.id}</p>
       <p><strong>Email:</strong> {doctor.email}</p>

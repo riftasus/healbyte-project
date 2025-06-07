@@ -1,0 +1,99 @@
+:root {
+  --bg-main: #1a1b1e;
+  --bg-secondary: #2a2b2e;
+  --bg-highlight: #32333a;
+  --text-main: #f5f5fa;
+  --text-muted: #b0b0c3;
+  --accent: #ff79c6;
+  --accent-soft: #bd93f9;
+  --border: #3e3f4a;
+  --radius: 12px;
+  --shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+  --transition: 0.25s ease-in-out;
+}
+
+body {
+  background-color: var(--bg-main);
+  color: var(--text-main);
+  font-family: 'Segoe UI', sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+nav {
+  background: var(--bg-secondary);
+  padding: 1rem 2rem;
+  display: flex;
+  gap: 1.5rem;
+  box-shadow: var(--shadow);
+  border-bottom: 1px solid var(--border);
+}
+
+nav a {
+  color: var(--accent);
+  text-decoration: none;
+  font-weight: bold;
+  transition: var(--transition);
+}
+
+nav a:hover {
+  color: var(--accent-soft);
+}
+
+h1, h2, h3 {
+  color: var(--accent);
+}
+
+form {
+  background: var(--bg-secondary);
+  padding: 2rem;
+  margin: 2rem auto;
+  width: 100%;
+  max-width: 500px;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  border: 1px solid var(--border);
+}
+
+input, textarea, select {
+  background: var(--bg-highlight);
+  color: var(--text-main);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 0.75rem;
+  margin-bottom: 1rem;
+  width: 100%;
+  transition: var(--transition);
+}
+
+input:focus, textarea:focus, select:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(255, 121, 198, 0.2);
+}
+
+button {
+  background: var(--accent);
+  color: var(--bg-main);
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: var(--radius);
+  cursor: pointer;
+  font-weight: bold;
+  transition: var(--transition);
+  box-shadow: var(--shadow);
+}
+
+button:hover {
+  background: var(--accent-soft);
+}
+
+p {
+  color: var(--text-muted);
+}
+
+.container {
+  padding: 2rem;
+  max-width: 800px;
+  margin: auto;
+}

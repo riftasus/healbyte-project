@@ -93,6 +93,12 @@ async function registerUser(req, res) {
 
     const result = await pool.query(insertQuery, insertValues);
     const newUserId = result.rows[0].user_id;
+
+    await pool.query(
+      `INSERT INTO patient (user_id) VALUES ($1)`,
+      [newUserId]
+    );
+
     const newToken = jwtTokenGenerator(newUserId, 'patient');
 
     return res.status(200).json({ message: "Signup successful", user_id: newUserId, token: newToken });
